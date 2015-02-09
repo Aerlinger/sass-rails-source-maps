@@ -13,10 +13,13 @@ module SassRailsSourceMaps
     end
 
     def evaluate_with_source_maps(context, locals, &block)
-      cache_store = Sprockets::SassCacheStore.new(context.environment)
+      # cache_store = Sprockets::SassCacheStore.new(context.environment)
+      cache_store = CacheStore.new(context.environment)
+
+      map_filename = eval_file + '.map'
 
       options = {
-        sourcemap_filename:  ::Sass::Util::sourcemap_name(basename),
+        sourcemap_filename:  map_filename,
         filename:            eval_file,
         line:                line,
         syntax:              syntax,
@@ -24,8 +27,8 @@ module SassRailsSourceMaps
         cache:               ::Rails.application.config.assets.debug,
         line_numbers:        ::Rails.application.config.sass.line_numbers,
         line_comments:       ::Rails.application.config.sass.line_comments,
-        importer:            SassImporter.new(context.pathname.to_s),
-        load_paths:          context.environment.paths.map { |path| SassImporter.new(path.to_s) },
+        importer:            importer_class.new(context.pathname.to_s),
+        load_paths:          context.environment.paths.map { |path| importer_class.new(path.to_s) },
         sprockets:           {
           context:     context,
           environment: context.environment
@@ -34,7 +37,7 @@ module SassRailsSourceMaps
 
       result, mapping = ::Sass::Engine.new(data, options).render_with_sourcemap("/#{SOURCE_MAPS_DIRECTORY}/#{options[:sourcemap_filename]}")
 
-      write_output(data, ::Rails.root.join("public", SOURCE_MAPS_DIRECTORY, basename).to_s)
+      write_output(data, ::Rails.root.join("public", SOURCE_MAPS_DIRECTORY, map_filename).to_s)
       write_output(mapping.to_json(
           css_path:       basename.gsub(".#{syntax.to_s}", ""),
           sourcemap_path: ::Rails.root.join("public", SOURCE_MAPS_DIRECTORY, options[:sourcemap_filename])) + "\n",

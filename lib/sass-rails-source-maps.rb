@@ -1,4 +1,5 @@
 require 'sprockets'
+require 'sass'
 require 'sass-rails'
 require 'fileutils'
 require 'sass-rails-source-maps/version'
