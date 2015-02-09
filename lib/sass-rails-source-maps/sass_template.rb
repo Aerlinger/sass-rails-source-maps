@@ -14,7 +14,7 @@ module SassRailsSourceMaps
 
     def evaluate_with_source_maps(context, locals, &block)
       # cache_store = Sprockets::SassCacheStore.new(context.environment)
-      cache_store = CacheStore.new(context.environment)
+      cache_store = ::Sass::Rails::CacheStore.new(context.environment)
 
       map_filename = eval_file + '.map'
 
