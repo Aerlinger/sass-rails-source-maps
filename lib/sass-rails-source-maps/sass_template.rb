@@ -35,11 +35,12 @@ module SassRailsSourceMaps
         }
       }
 
+      puts "Generating sourcemap for #{map_filename}"
       Rails.logger.info("Generating sourcemap for #{map_filename}")
 
       result, mapping = ::Sass::Engine.new(data, options).render_with_sourcemap("/#{SOURCE_MAPS_DIRECTORY}/#{options[:sourcemap_filename]}")
 
-      write_output(data, ::Rails.root.join("public", SOURCE_MAPS_DIRECTORY, map_filename).to_s)
+      write_output(data, ::Rails.root.join("public", SOURCE_MAPS_DIRECTORY, basename).to_s)
       write_output(mapping.to_json(
           css_path:       basename.gsub(".#{syntax.to_s}", ""),
           sourcemap_path: ::Rails.root.join("public", SOURCE_MAPS_DIRECTORY, options[:sourcemap_filename])) + "\n",
