@@ -35,6 +35,8 @@ module SassRailsSourceMaps
         }
       }
 
+      Rails.logger.info("Generating sourcemap for #{map_filename}")
+
       result, mapping = ::Sass::Engine.new(data, options).render_with_sourcemap("/#{SOURCE_MAPS_DIRECTORY}/#{options[:sourcemap_filename]}")
 
       write_output(data, ::Rails.root.join("public", SOURCE_MAPS_DIRECTORY, map_filename).to_s)
