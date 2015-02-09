@@ -45,7 +45,7 @@ module SassRailsSourceMaps
           css_path:       basename.gsub(".#{syntax.to_s}", ""),
           sourcemap_path: ::Rails.root.join("public", SOURCE_MAPS_DIRECTORY, options[:sourcemap_filename])) + "\n",
         ::Rails.root.join("public", SOURCE_MAPS_DIRECTORY, options[:sourcemap_filename]).to_s)
-      copy_dependencies(context._dependency_paths)
+      # copy_dependencies(context._dependency_paths)
 
       result
     rescue ::Sass::SyntaxError => e
